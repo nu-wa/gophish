@@ -18,7 +18,8 @@ import (
 func (as *Server) Groups(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == "GET":
-		gs, err := models.GetGroups(ctx.Get(r, "user_id").(int64))
+        user_ids, err := models.GetUsersIDsInUserGroup(ctx.Get(r, "user_id").(int64))
+		gs, err := models.GetGroups(user_ids)
 		if err != nil {
 			JSONResponse(w, models.Response{Success: false, Message: "No groups found"}, http.StatusNotFound)
 			return

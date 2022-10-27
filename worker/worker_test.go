@@ -95,7 +95,7 @@ func setupCampaign(id int) (*models.Campaign, error) {
 	}
 	c.Page = page
 
-	smtp, err := models.GetSMTP(1, 1)
+	smtp, err := models.GetSMTP(1, []int64{ 1 })
 	if err != nil {
 		return nil, err
 	}

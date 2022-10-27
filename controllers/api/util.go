@@ -84,7 +84,7 @@ func (as *Server) SendTestEmail(w http.ResponseWriter, r *http.Request) {
 	// If a complete sending profile is provided use it
 	if err := s.SMTP.Validate(); err != nil {
 		// Otherwise get the SMTP requested by name
-		smtp, lookupErr := models.GetSMTPByName(s.SMTP.Name, s.UserId)
+		smtp, lookupErr := models.GetSMTPByName(s.SMTP.Name, []int64{ s.UserId })
 		// If the Sending Profile doesn't exist, let's err on the side
 		// of caution and assume that the validation failure was more important.
 		if lookupErr != nil {

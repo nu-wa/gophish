@@ -374,7 +374,7 @@ func TestRedirectTemplating(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error posting new page: %v", err)
 	}
-	smtp, _ := models.GetSMTP(1, 1)
+	smtp, _ := models.GetSMTP(1, []int64{ 1 })
 	template, _ := models.GetTemplate(1, []int64{ 1 })
 	group, _ := models.GetGroup(1, []int64{ 1 })
 

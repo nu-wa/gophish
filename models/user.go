@@ -134,7 +134,7 @@ func DeleteUser(id int64) error {
 	}
 	// Delete the groups
 	log.Infof("Deleting groups for user ID %d", id)
-	groups, err := GetGroups(id)
+	groups, err := GetGroups([]int64{ id })
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func DeleteUser(id int64) error {
 	}
 	// Delete the sending profiles
 	log.Infof("Deleting sending profiles for user ID %d", id)
-	profiles, err := GetSMTPs(id)
+	profiles, err := GetSMTPs([]int64{ id })
 	if err != nil {
 		return err
 	}

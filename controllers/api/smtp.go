@@ -17,7 +17,8 @@ import (
 func (as *Server) SendingProfiles(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == "GET":
-		ss, err := models.GetSMTPs(ctx.Get(r, "user_id").(int64))
+        user_ids, err := models.GetUsersIDsInUserGroup(ctx.Get(r, "user_id").(int64))
+		ss, err := models.GetSMTPs(user_ids)
 		if err != nil {
 			log.Error(err)
 		}
@@ -32,7 +33,7 @@ func (as *Server) SendingProfiles(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// Check to make sure the name is unique
-		_, err = models.GetSMTPByName(s.Name, ctx.Get(r, "user_id").(int64))
+		_, err = models.GetSMTPByName(s.Name, []int64{ ctx.Get(r, "user_id").(int64) })
 		if err != gorm.ErrRecordNotFound {
 			JSONResponse(w, models.Response{Success: false, Message: "SMTP name already in use"}, http.StatusConflict)
 			log.Error(err)
@@ -54,7 +55,8 @@ func (as *Server) SendingProfiles(w http.ResponseWriter, r *http.Request) {
 func (as *Server) SendingProfile(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.ParseInt(vars["id"], 0, 64)
-	s, err := models.GetSMTP(id, ctx.Get(r, "user_id").(int64))
+    user_ids, err := models.GetUsersIDsInUserGroup(ctx.Get(r, "user_id").(int64))
+	s, err := models.GetSMTP(id, user_ids)
 	if err != nil {
 		JSONResponse(w, models.Response{Success: false, Message: "SMTP not found"}, http.StatusNotFound)
 		return
