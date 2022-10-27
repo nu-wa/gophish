@@ -73,6 +73,24 @@ if [ -n "${DB_FILE_PATH+set}" ] ; then
         cat config.json.tmp > config.json
 fi
 
+if [ -n "${GOPHISH_DATABASE_URL+set}" ] ; then
+    jq -r \
+        --arg DB_FILE_PATH "${GOPHISH_DATABASE_URL}" \
+        '.db_path = $DB_FILE_PATH' config.json > config.json.tmp && \
+        cat config.json.tmp > config.json
+
+    jq -r \
+        '.db_name = "mysql"' config.json > config.json.tmp && \
+        cat config.json.tmp > config.json
+fi
+
+if [ -n "${GOPHISH_LOG_LEVEL+set}" ] ; then
+    jq -r \
+        --arg LOGGING_LEVEL "${GOPHISH_LOG_LEVEL}" \
+        '.logging.level = $LOGGING_LEVEL' config.json > config.json.tmp && \
+        cat config.json.tmp > config.json
+fi
+
 echo "Runtime configuration: "
 cat config.json
 
