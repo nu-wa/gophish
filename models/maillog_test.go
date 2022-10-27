@@ -94,7 +94,7 @@ func (s *ModelsSuite) TestMailLogBackoff(ch *check.C) {
 		ch.Assert(result.Status, check.Equals, StatusRetry)
 	}
 	// Get our updated campaign and check for the added event
-	campaign, err = GetCampaign(campaign.Id, int64(1))
+	campaign, err = GetCampaign(campaign.Id, []int64{ int64(1) })
 	ch.Assert(err, check.Equals, nil)
 
 	// We expect MaxSendAttempts + the initial campaign created event
@@ -127,7 +127,7 @@ func (s *ModelsSuite) TestMailLogError(ch *check.C) {
 	ch.Assert(result.Status, check.Equals, Error)
 
 	// Get our updated campaign and check for the added event
-	campaign, err = GetCampaign(campaign.Id, int64(1))
+	campaign, err = GetCampaign(campaign.Id, []int64{ 1 })
 	ch.Assert(err, check.Equals, nil)
 
 	expectedEventLength := 2
@@ -169,7 +169,7 @@ func (s *ModelsSuite) TestMailLogSuccess(ch *check.C) {
 	ch.Assert(result.Status, check.Equals, EventSent)
 
 	// Get our updated campaign and check for the added event
-	campaign, err = GetCampaign(campaign.Id, int64(1))
+	campaign, err = GetCampaign(campaign.Id, []int64{ 1 })
 	ch.Assert(err, check.Equals, nil)
 
 	expectedEventLength := 2

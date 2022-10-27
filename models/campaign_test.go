@@ -19,7 +19,7 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	// For comparing the dates, we need to fetch the campaign again. This is
 	// to solve an issue where the campaign object right now has time down to
 	// the microsecond, while in MySQL it's rounded down to the second.
-	campaign, _ = GetCampaign(campaign.Id, campaign.UserId)
+	campaign, _ = GetCampaign(campaign.Id, []int64{ campaign.UserId })
 
 	ms, err := GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)
@@ -34,7 +34,7 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	err = PostCampaign(&campaign, campaign.UserId)
 	c.Assert(err, check.Equals, nil)
 
-	campaign, _ = GetCampaign(campaign.Id, campaign.UserId)
+	campaign, _ = GetCampaign(campaign.Id, []int64{ campaign.UserId })
 
 	ms, err = GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)
@@ -50,7 +50,7 @@ func (s *ModelsSuite) TestGenerateSendDate(c *check.C) {
 	err = PostCampaign(&campaign, campaign.UserId)
 	c.Assert(err, check.Equals, nil)
 
-	campaign, _ = GetCampaign(campaign.Id, campaign.UserId)
+	campaign, _ = GetCampaign(campaign.Id, []int64{ campaign.UserId })
 
 	ms, err = GetMailLogsByCampaign(campaign.Id)
 	c.Assert(err, check.Equals, nil)
@@ -137,7 +137,7 @@ func (s *ModelsSuite) TestCompleteCampaignAlsoDeletesMailLogs(c *check.C) {
 	c.Assert(err, check.Equals, nil)
 	c.Assert(len(ms), check.Equals, len(campaign.Results))
 
-	err = CompleteCampaign(campaign.Id, campaign.UserId)
+	err = CompleteCampaign(campaign.Id, []int64{ campaign.UserId })
 	c.Assert(err, check.Equals, nil)
 
 	ms, err = GetMailLogsByCampaign(campaign.Id)
@@ -147,7 +147,7 @@ func (s *ModelsSuite) TestCompleteCampaignAlsoDeletesMailLogs(c *check.C) {
 
 func (s *ModelsSuite) TestCampaignGetResults(c *check.C) {
 	campaign := s.createCampaign(c)
-	got, err := GetCampaign(campaign.Id, campaign.UserId)
+	got, err := GetCampaign(campaign.Id, []int64{ campaign.UserId })
 	c.Assert(err, check.Equals, nil)
 	c.Assert(len(campaign.Results), check.Equals, len(got.Results))
 }
@@ -289,7 +289,7 @@ func BenchmarkGetCampaign100(b *testing.B) {
 	campaign := setupCampaign(b, 100)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := GetCampaign(campaign.Id, campaign.UserId)
+		_, err := GetCampaign(campaign.Id, []int64{ campaign.UserId })
 		if err != nil {
 			b.Fatalf("error getting campaign: %v", err)
 		}
@@ -302,7 +302,7 @@ func BenchmarkGetCampaign1000(b *testing.B) {
 	campaign := setupCampaign(b, 1000)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := GetCampaign(campaign.Id, campaign.UserId)
+		_, err := GetCampaign(campaign.Id, []int64{ campaign.UserId })
 		if err != nil {
 			b.Fatalf("error getting campaign: %v", err)
 		}
@@ -315,7 +315,7 @@ func BenchmarkGetCampaign5000(b *testing.B) {
 	campaign := setupCampaign(b, 5000)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := GetCampaign(campaign.Id, campaign.UserId)
+		_, err := GetCampaign(campaign.Id, []int64{ campaign.UserId })
 		if err != nil {
 			b.Fatalf("error getting campaign: %v", err)
 		}
@@ -328,7 +328,7 @@ func BenchmarkGetCampaign10000(b *testing.B) {
 	campaign := setupCampaign(b, 10000)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := GetCampaign(campaign.Id, campaign.UserId)
+		_, err := GetCampaign(campaign.Id, []int64{ campaign.UserId })
 		if err != nil {
 			b.Fatalf("error getting campaign: %v", err)
 		}

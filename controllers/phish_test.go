@@ -278,7 +278,7 @@ func TestCompletedCampaignClick(t *testing.T) {
 		t.Fatalf("unexpected result status received. expected %s got %s", models.EventOpened, result.Status)
 	}
 
-	models.CompleteCampaign(campaign.Id, 1)
+	models.CompleteCampaign(campaign.Id, []int64{ 1 })
 	openEmail404(t, ctx, result.RId)
 	clickLink404(t, ctx, result.RId)
 

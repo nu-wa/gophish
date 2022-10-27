@@ -135,7 +135,7 @@ func (m *MailLog) Success() error {
 func (m *MailLog) GetDialer() (mailer.Dialer, error) {
 	c := m.cachedCampaign
 	if c == nil {
-		campaign, err := GetCampaignMailContext(m.CampaignId, m.UserId)
+		campaign, err := GetCampaignMailContext(m.CampaignId, []int64{ m.UserId })
 		if err != nil {
 			return nil, err
 		}
@@ -155,7 +155,7 @@ func (m *MailLog) CacheCampaign(campaign *Campaign) error {
 }
 
 func (m *MailLog) GetSmtpFrom() (string, error) {
-	c, err := GetCampaign(m.CampaignId, m.UserId)
+	c, err := GetCampaign(m.CampaignId, []int64{ m.UserId })
 	if err != nil {
 		return "", err
 	}
@@ -175,7 +175,7 @@ func (m *MailLog) Generate(msg *gomail.Message) error {
 	}
 	c := m.cachedCampaign
 	if c == nil {
-		campaign, err := GetCampaignMailContext(m.CampaignId, m.UserId)
+		campaign, err := GetCampaignMailContext(m.CampaignId, []int64{ m.UserId })
 		if err != nil {
 			return err
 		}

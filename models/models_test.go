@@ -100,7 +100,7 @@ func (s *ModelsSuite) createCampaign(ch *check.C) Campaign {
 	// For comparing the dates, we need to fetch the campaign again. This is
 	// to solve an issue where the campaign object right now has time down to
 	// the microsecond, while in MySQL it's rounded down to the second.
-	c, _ = GetCampaign(c.Id, c.UserId)
+	c, _ = GetCampaign(c.Id, []int64{ c.UserId })
 	return c
 }
 

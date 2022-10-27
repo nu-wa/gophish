@@ -163,8 +163,7 @@ func DeleteUser(id int64) error {
 
 // TODO: Improve this, probably can be all done using a SQL query :)
 func GetUsersIDsInUserGroup(uid int64) ([]int64, error) {
-    user_ids := []int64{}
-    user_ids = append(user_ids, uid)
+    user_ids := []int64{ uid }
     groups, err := GetAdminGroupsUsersIsPartOf(uid)
 
     if err != nil {
