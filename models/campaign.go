@@ -471,12 +471,15 @@ func PostCampaign(c *Campaign, uid int64) error {
 	if c.LaunchDate.Before(c.CreatedDate) || c.LaunchDate.Equal(c.CreatedDate) {
 		c.Status = CampaignInProgress
 	}
+
+    users_ids, _ := GetUsersIDsInUserGroup(uid);
+
 	// Check to make sure all the groups already exist
 	// Also, later we'll need to know the total number of recipients (counting
 	// duplicates is ok for now), so we'll do that here to save a loop.
 	totalRecipients := 0
 	for i, g := range c.Groups {
-		c.Groups[i], err = GetGroupByName(g.Name, []int64 { uid })
+		c.Groups[i], err = GetGroupByName(g.Name, users_ids)
 		if err == gorm.ErrRecordNotFound {
 			log.WithFields(logrus.Fields{
 				"group": g.Name,
@@ -489,7 +492,7 @@ func PostCampaign(c *Campaign, uid int64) error {
 		totalRecipients += len(c.Groups[i].Targets)
 	}
 	// Check to make sure the template exists
-	t, err := GetTemplateByName(c.Template.Name, []int64{ uid })
+	t, err := GetTemplateByName(c.Template.Name, users_ids)
 	if err == gorm.ErrRecordNotFound {
 		log.WithFields(logrus.Fields{
 			"template": c.Template.Name,
@@ -515,7 +518,7 @@ func PostCampaign(c *Campaign, uid int64) error {
 	c.Page = p
 	c.PageId = p.Id
 	// Check to make sure the sending profile exists
-	s, err := GetSMTPByName(c.SMTP.Name, []int64{ uid })
+	s, err := GetSMTPByName(c.SMTP.Name, users_ids)
 	if err == gorm.ErrRecordNotFound {
 		log.WithFields(logrus.Fields{
 			"smtp": c.SMTP.Name,
