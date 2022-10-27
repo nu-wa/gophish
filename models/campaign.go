@@ -476,7 +476,7 @@ func PostCampaign(c *Campaign, uid int64) error {
 	// duplicates is ok for now), so we'll do that here to save a loop.
 	totalRecipients := 0
 	for i, g := range c.Groups {
-		c.Groups[i], err = GetGroupByName(g.Name, uid)
+		c.Groups[i], err = GetGroupByName(g.Name, []int64 { uid })
 		if err == gorm.ErrRecordNotFound {
 			log.WithFields(logrus.Fields{
 				"group": g.Name,

@@ -34,7 +34,8 @@ func (as *Server) Groups(w http.ResponseWriter, r *http.Request) {
 			JSONResponse(w, models.Response{Success: false, Message: "Invalid JSON structure"}, http.StatusBadRequest)
 			return
 		}
-		_, err = models.GetGroupByName(g.Name, ctx.Get(r, "user_id").(int64))
+        user_ids, err := models.GetUsersIDsInUserGroup(ctx.Get(r, "user_id").(int64))
+		_, err = models.GetGroupByName(g.Name, user_ids)
 		if err != gorm.ErrRecordNotFound {
 			JSONResponse(w, models.Response{Success: false, Message: "Group name already in use"}, http.StatusConflict)
 			return
