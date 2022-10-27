@@ -122,7 +122,8 @@ func (as *Server) GroupSummary(w http.ResponseWriter, r *http.Request) {
 	case r.Method == "GET":
 		vars := mux.Vars(r)
 		id, _ := strconv.ParseInt(vars["id"], 0, 64)
-		g, err := models.GetGroupSummary(id, ctx.Get(r, "user_id").(int64))
+        user_ids, err := models.GetUsersIDsInUserGroup(ctx.Get(r, "user_id").(int64))
+		g, err := models.GetGroupSummary(id, user_ids)
 		if err != nil {
 			JSONResponse(w, models.Response{Success: false, Message: "Group not found"}, http.StatusNotFound)
 			return
