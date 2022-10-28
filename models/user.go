@@ -167,14 +167,24 @@ func GetUsersIDsInUserGroup(uid int64) ([]int64, error) {
     groups, err := GetAdminGroupsUsersIsPartOf(uid)
 
     if err != nil {
-        return user_ids, err
+        return []int64{}, err
     }
 
     for _, group := range groups {
         for _, user := range group.Users {
-            user_ids = append(user_ids, user.Id)
+            user_ids = append_if_not_already_in_slice(user_ids, user.Id)
         }
     }
 
     return user_ids, nil
+}
+
+func append_if_not_already_in_slice(slice []int64, uid int64) []int64 {
+    for _, id := range slice {
+        if id == uid {
+            return slice
+        }
+    }
+
+    return append(slice, uid)
 }

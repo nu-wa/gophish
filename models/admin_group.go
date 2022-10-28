@@ -22,8 +22,8 @@ func GetAdminGroups() ([]AdminGroup, error) {
 }
 
 func PutAdminGroup(ag *AdminGroup) error {
-    db.Model(&ag).Association("Users").Replace(ag.Users)
     err := db.Save(ag).Error
+    db.Model(&ag).Association("Users").Replace(ag.Users)
     return err
 }
 
@@ -37,7 +37,7 @@ func GetAdminGroupsUsersIsPartOf(uid int64) ([]AdminGroup, error) {
     admin_groups := []AdminGroup{}
 
     err := db.Preload("Users").
-        Where("id IN (SELECT user_id FROM users_admin_groups WHERE user_id = ?)", uid).
+        Where("id IN (SELECT admin_group_id FROM users_admin_groups WHERE user_id = ?)", uid).
         Find(&admin_groups).Error
     if err != nil {
         log.Error(err)
