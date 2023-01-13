@@ -42,6 +42,6 @@ RUN touch config.json.tmp
 
 EXPOSE 3333 8080 8443 80
 
-VOLUME [ "/opt/gophish/static/campaigns" ]
+VOLUME [ "/opt/gophish/static/enpoints/campaigns" ]
 
 CMD ["./docker/run.sh"]
